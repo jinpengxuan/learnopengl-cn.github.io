@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://learnopengl-cn.github.io/04 Advanced OpenGL/11 Anti Aliasing/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+
+	<title>抗锯齿 - LearnOpenGL CN</title>
+
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome-4.0.3.css" rel="stylesheet">
+        <link rel="stylesheet" href="../../css/highlight.css">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link href="../../css/style.css" rel="stylesheet">
+        <link href="../../css/admonition_fix.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+          ga('create', 'UA-80323542-1', 'auto');
+          ga('send', 'pageview');
+        </script>
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <!-- Main title -->
+            <a class="navbar-brand" href="../..">LearnOpenGL CN</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            <!-- Main navigation -->
+            <ul class="nav navbar-nav">
+            
+            
+                <li >
+                    <a href="../..">主页</a>
+                </li>
+            
+            
+            
+                <li class="dropdown active">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">目录 <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                    
+                        
+<li >
+    <a href="../../intro/">简介</a>
+</li>
+
+                    
+                        
+  <li class="dropdown-submenu">
+    <a tabindex="-1" class="nav-title">入门</a>
+    <ul class="dropdown-menu">
+        
+            
+<li >
+    <a href="../../01 Getting started/01 OpenGL/">OpenGL</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../01 Getting started/02 Creating a window/">创建窗口</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../01 Getting started/03 Hello Window/">你好，窗口</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../01 Getting started/04 Hello Triangle/">你好，三角形</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../01 Getting started/05 Shaders/">着色器</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../01 Getting started/06 Textures/">纹理</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../01 Getting started/07 Transformations/">变换</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../01 Getting started/08 Coordinate Systems/">坐标系统</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../01 Getting started/09 Camera/">摄像机</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../01 Getting started/10 Review/">复习</a>
+</li>
+
+        
+    </ul>
+  </li>
+
+                    
+                        
+  <li class="dropdown-submenu">
+    <a tabindex="-1" class="nav-title">光照</a>
+    <ul class="dropdown-menu">
+        
+            
+<li >
+    <a href="../../02 Lighting/01 Colors/">颜色</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../02 Lighting/02 Basic Lighting/">基础光照</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../02 Lighting/03 Materials/">材质</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../02 Lighting/04 Lighting maps/">光照贴图</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../02 Lighting/05 Light casters/">投光物</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../02 Lighting/06 Multiple lights/">多光源</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../02 Lighting/07 Review/">复习</a>
+</li>
+
+        
+    </ul>
+  </li>
+
+                    
+                        
+  <li class="dropdown-submenu">
+    <a tabindex="-1" class="nav-title">模型加载</a>
+    <ul class="dropdown-menu">
+        
+            
+<li >
+    <a href="../../03 Model Loading/01 Assimp/">Assimp</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../03 Model Loading/02 Mesh/">网格</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../03 Model Loading/03 Model/">模型</a>
+</li>
+
+        
+    </ul>
+  </li>
+
+                    
+                        
+  <li class="dropdown-submenu">
+    <a tabindex="-1" class="nav-title">高级OpenGL</a>
+    <ul class="dropdown-menu">
+        
+            
+<li >
+    <a href="../01 Depth testing/">深度测试</a>
+</li>
+
+        
+            
+<li >
+    <a href="../02 Stencil testing/">模板测试</a>
+</li>
+
+        
+            
+<li >
+    <a href="../03 Blending/">混合</a>
+</li>
+
+        
+            
+<li >
+    <a href="../04 Face culling/">面剔除</a>
+</li>
+
+        
+            
+<li >
+    <a href="../05 Framebuffers/">帧缓冲</a>
+</li>
+
+        
+            
+<li >
+    <a href="../06 Cubemaps/">立方体贴图</a>
+</li>
+
+        
+            
+<li >
+    <a href="../07 Advanced Data/">高级数据</a>
+</li>
+
+        
+            
+<li >
+    <a href="../08 Advanced GLSL/">高级GLSL</a>
+</li>
+
+        
+            
+<li >
+    <a href="../09 Geometry Shader/">几何着色器</a>
+</li>
+
+        
+            
+<li >
+    <a href="../10 Instancing/">实例化</a>
+</li>
+
+        
+            
+<li class="active">
+    <a href="./">抗锯齿</a>
+</li>
+
+        
+    </ul>
+  </li>
+
+                    
+                        
+  <li class="dropdown-submenu">
+    <a tabindex="-1" class="nav-title">高级光照</a>
+    <ul class="dropdown-menu">
+        
+            
+<li >
+    <a href="../../05 Advanced Lighting/01 Advanced Lighting/">高级光照</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../05 Advanced Lighting/02 Gamma Correction/">Gamma校正</a>
+</li>
+
+        
+            
+  <li class="dropdown-submenu">
+    <a tabindex="-1" class="nav-title">阴影</a>
+    <ul class="dropdown-menu">
+        
+            
+<li >
+    <a href="../../05 Advanced Lighting/03 Shadows/01 Shadow Mapping/">阴影映射</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../05 Advanced Lighting/03 Shadows/02 Point Shadows/">点阴影</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../05 Advanced Lighting/03 Shadows/03 CSM/">CSM</a>
+</li>
+
+        
+    </ul>
+  </li>
+
+        
+            
+<li >
+    <a href="../../05 Advanced Lighting/04 Normal Mapping/">法线贴图</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../05 Advanced Lighting/05 Parallax Mapping/">视差贴图</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../05 Advanced Lighting/06 HDR/">HDR</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../05 Advanced Lighting/07 Bloom/">泛光</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../05 Advanced Lighting/08 Deferred Shading/">延迟着色法</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../05 Advanced Lighting/09 SSAO/">SSAO</a>
+</li>
+
+        
+    </ul>
+  </li>
+
+                    
+                        
+  <li class="dropdown-submenu">
+    <a tabindex="-1" class="nav-title">特效</a>
+    <ul class="dropdown-menu">
+        
+            
+<li >
+    <a href="../../08 Effects/01 Fog/">雾</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../08 Effects/02 Toon shading/">卡通着色</a>
+</li>
+
+        
+    </ul>
+  </li>
+
+                    
+                        
+  <li class="dropdown-submenu">
+    <a tabindex="-1" class="nav-title">PBR</a>
+    <ul class="dropdown-menu">
+        
+            
+<li >
+    <a href="../../07 PBR/01 Theory/">理论</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../07 PBR/02 Lighting/">光照</a>
+</li>
+
+        
+            
+  <li class="dropdown-submenu">
+    <a tabindex="-1" class="nav-title">IBL</a>
+    <ul class="dropdown-menu">
+        
+            
+<li >
+    <a href="../../07 PBR/03 IBL/01 Diffuse irradiance/">漫反射辐照</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../07 PBR/03 IBL/02 Specular IBL/">镜面IBL</a>
+</li>
+
+        
+    </ul>
+  </li>
+
+        
+    </ul>
+  </li>
+
+                    
+                        
+  <li class="dropdown-submenu">
+    <a tabindex="-1" class="nav-title">实战</a>
+    <ul class="dropdown-menu">
+        
+            
+<li >
+    <a href="../../06 In Practice/01 Debugging/">调试</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../06 In Practice/02 Text Rendering/">文本渲染</a>
+</li>
+
+        
+            
+  <li class="dropdown-submenu">
+    <a tabindex="-1" class="nav-title">2D游戏</a>
+    <ul class="dropdown-menu">
+        
+            
+<li >
+    <a href="../../06 In Practice/2D-Game/01 Breakout/">Breakout</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../06 In Practice/2D-Game/02 Setting up/">准备工作</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../06 In Practice/2D-Game/03 Rendering Sprites/">渲染精灵</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../06 In Practice/2D-Game/04 Levels/">关卡</a>
+</li>
+
+        
+            
+  <li class="dropdown-submenu">
+    <a tabindex="-1" class="nav-title">碰撞</a>
+    <ul class="dropdown-menu">
+        
+            
+<li >
+    <a href="../../06 In Practice/2D-Game/05 Collisions/01 Ball/">球</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../06 In Practice/2D-Game/05 Collisions/02 Collision detection/">碰撞检测</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../06 In Practice/2D-Game/05 Collisions/03 Collision resolution/">碰撞处理</a>
+</li>
+
+        
+    </ul>
+  </li>
+
+        
+            
+<li >
+    <a href="../../06 In Practice/2D-Game/06 Particles/">粒子</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../06 In Practice/2D-Game/07 Postprocessing/">后期处理</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../06 In Practice/2D-Game/08 Powerups/">道具</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../06 In Practice/2D-Game/09 Audio/">音效</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../06 In Practice/2D-Game/10 Render Text/">渲染文本</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../06 In Practice/2D-Game/11 Final thoughts/">结语</a>
+</li>
+
+        
+    </ul>
+  </li>
+
+        
+    </ul>
+  </li>
+
+                    
+                        
+<li >
+    <a href="../../legacy/">历史存档</a>
+</li>
+
+                    
+                    </ul>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../../code_repo/">代码仓库</a>
+                </li>
+            
+            
+            </ul>
+
+            <!-- Search, Navigation and Repo links -->
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> 搜索
+                    </a>
+                </li>
+                <li >
+                    <a rel="next" href="../10 Instancing/">
+                        <i class="fa fa-arrow-left"></i> 上一节
+                    </a>
+                </li>
+                <li >
+                    <a rel="prev" href="../../05 Advanced Lighting/01 Advanced Lighting/">
+                        下一节 <i class="fa fa-arrow-right"></i>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="https://github.com/LearnOpenGL-CN/LearnOpenGL-CN">
+                        
+                            <i class="fa fa-github"></i>
+                        
+                        GitHub
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="https://www.patreon.com/learnopengl">
+                            <img class="patreon" src="/img/patreon_logo.png" alt="">
+                        Patreon
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+            <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#_1">抗锯齿</a></li>
+        
+            <li><a href="#_2">多重采样</a></li>
+        
+            <li><a href="#openglmsaa">OpenGL中的MSAA</a></li>
+        
+            <li><a href="#msaa">离屏MSAA</a></li>
+        
+            <li><a href="#_6">自定义抗锯齿算法</a></li>
+        
+    
+    </ul>
+</div></div>
+            <div class="col-md-9" role="main">
+
+<h1 id="_1">抗锯齿</h1>
+<table>
+<thead>
+<tr>
+<th>原文</th>
+<th><a href="http://learnopengl.com/#!Advanced-OpenGL/Anti-Aliasing">Anti Aliasing</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>作者</td>
+<td>JoeyDeVries</td>
+</tr>
+<tr>
+<td>翻译</td>
+<td><a href="http://bullteacher.com/">Django</a></td>
+</tr>
+<tr>
+<td>校对</td>
+<td><a href="http://geequlim.com">Geequlim</a>,<a href="https://hellokenlee.github.io/">KenLee</a></td>
+</tr>
+</tbody>
+</table>
+<p>在你的渲染大冒险中，你可能会遇到模型边缘有锯齿的问题。<strong>锯齿边缘(Jagged Edge)</strong>出现的原因是由顶点数据光栅化成为片段(fragment)的方式所引起的。举个例子，我们随手绘制一个简单的正方体就已经能很清楚地看到锯齿边缘的效果：</p>
+<p><img alt="" src="../../img/04/11/anti_aliasing_aliasing.png" /></p>
+<p>尽管可能不会被立刻察觉到，如果你更近的看看立方体的边，你就会发现锯齿状的图案。如果我们放大就会看到下面的情境：</p>
+<p><img alt="" src="../../img/04/11/anti_aliasing_zoomed.png" /></p>
+<p>这当然不是我们在实际应用中想要的效果。这个效果，我们很明显能看到边缘像素的形态，这种现象被称之为<strong>走样(Aliasing)</strong>。有很多技术能够减少走样现象，产生更平滑的边缘，这些技术叫做<strong>抗锯齿技术</strong>(Anti-aliasing，也被称为反走样技术)。</p>
+<p>最开始我们有一个叫做<strong>超采样抗锯齿技术(Super Sample Anti-aliasing, SSAA)</strong>，它暂时使用一个更高的分辨率（以超采样方式）来渲染场景，当输出图像在帧缓冲中被更新时，图像的分辨率会被下采样(down sample)回原来的分辨率。它使用额外的分辨率来防止锯齿边缘。虽然它确实为我们提供了一种解决走样问题的方案，但却由于必须绘制比平时更多的片段而降低了性能。所以这个技术只流行了一段时间。</p>
+<p>这个技术的基础上诞生了更为现代的技术，叫做<strong>多采样抗锯齿(Multisample Anti-aliasing)</strong>或叫<strong>MSAA</strong>，虽然它借用了SSAA的理念，但却以更加高效的方式实现了它。这节教程我们会展开讨论这个OpenGL内建的MSAA技术。</p>
+<h2 id="_2">多重采样</h2>
+<p>为了理解什么是多重采样(Multisampling)，以及它是如何解决锯齿问题的，我们先要更深入了解一下OpenGL光栅化的工作方式。</p>
+<p>光栅化表示在我们输出的顶点(Vertices)和片段着色器(fragment shader)中间的所有算法和处理过程的集合(译者注： 在OpenGL中，光栅化步骤在几何着色器后，片段着色器前)。光栅化将属于一个图元的所有顶点转化为一系列片段。顶点坐标理论上可以是任意值，但片段却不是这样，这是因为它们受你的窗口的分辨率限制。几乎永远都不会有顶点坐标和片段的一对一映射，所以光栅化必须以某种方式决定每个顶点最终位于哪个片段/屏幕坐标上。</p>
+<p><img alt="" src="../../img/04/11/anti_aliasing_rasterization.png" /></p>
+<p>这里我们看到一个屏幕像素网格，每个像素中心包含一个采样点（sample point），它被用来决定一个像素是否被三角形所覆盖。红色的采样点表示该点被三角形所覆盖，片段着色器会给该屏幕像素着色。不过即使三角形覆盖了某一个屏幕像素的一部分，但是中心的采样点没被覆盖到，这个像素仍然不会受到片段着色器的影响。</p>
+<p>你可能现在已经明白走样的原因是什么了。上述三角形渲染后在你的屏幕上会是这样的：</p>
+<p><img alt="" src="../../img/04/11/anti_aliasing_rasterization_filled.png" /></p>
+<p>由于屏幕像素总量的限制，有些边上的像素能被渲染出来，而有些则不会。结果就是我们渲染出的图元的边缘产生了上图的锯齿。</p>
+<p>多采样所做的正是不再使用单一采样点来决定三角形的覆盖范围，而是采用多个采样点(这大概就是它名字的由来)。我们不再使用每个像素中心的采样点，取而代之的是4个子采样（subsample），用它们来决定像素是否被覆盖。这意味着颜色缓冲的大小也由于每个像素的子样本的增加而增加了。</p>
+<p><img alt="" src="../../img/04/11/anti_aliasing_sample_points.png" /></p>
+<p>上图的左侧显示了我们普通决定一个三角形是否覆盖屏幕像素的方式(译者注： 中心点，单采样)。这个像素并不会被一个片段着色器着色（因此它保持空白），因为它的采样点没有被三角形所覆盖。右边示了多采样的版本，每个像素包含4个采样点。这里我们可以看到只有2个采样点被三角形覆盖。</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>采样点的数量是任意的，更多的采样点能带来更精确的覆盖率。</p>
+</div>
+<p>从这儿开始我们的多重采样变得有趣起来了。我们知道了只有2个子采样被三角覆盖，下一步就是决定这个像素的颜色。我们可以猜测一下，我们会为每个被覆盖的子采样运行片段着色器，然后对每个像素的所有子采样的颜色进行平均化。在这种情况下，我们需要为每一个被插值后的顶点数据的每一个子采样运行两次两次片段着色器，然后把采样点的颜色储存起来。幸好，它不是这么运作的，因为这等于说我们必须运行更多的片段着色器，会明显降低性能。</p>
+<p>MSAA的真正工作方式是，每个像素只运行一次片段着色器，无论该像素有多少子样本被三角形所覆盖。片段着色器接受的顶点数据是被插值到每一个像素的<strong>中心</strong>坐标，而其着色的颜色会被每个被三角形覆盖的子采样储存。一旦一个我们绘制的图元的子采样颜色缓冲被填满了，每个像素对应的所有颜色将会被平均化，这使得每个像素最终有了一个唯一颜色。比如在前面的图片中4个子采样中只有2个被三角形覆盖，像素的颜色事实上是一个均值，该均值由三角形的颜色和其他2个子采样的颜色(aka. 背景色)平均化而成，最后该像素被着色为一种浅蓝色。</p>
+<p>结果是，颜色缓冲中所有图元的边变得更加平滑了。让我们看看多重采样对前面的一个三角形来说是怎样做的：</p>
+<p><img alt="" src="../../img/04/11/anti_aliasing_rasterization_samples.png" /></p>
+<p>这里每个像素包含着4个子采样（不相关采样点的没有被标注出来）蓝色的子采样是被三角形覆盖了的，灰色的则没有被覆盖。三角形内部区域中的所有像素都会运行一次片段着色器，它输出的颜色由4个子采样决定。三角形的边缘并不是所有的子采样都会被覆盖，所以片段着色器的结果仅由部分的子采样决定。根据被覆盖子采样的数量，最终的像素颜色由三角形颜色和其他子采样所储存的颜色所决定。(译者注： 其实有点类似于Blending的原理。)</p>
+<p>大致上来说，如果更多的采样点被覆盖，那么像素的颜色就会更接近于三角形。如果我们用这种方去给我们前面的三角形的填充像素颜色，我们会获得这样的结果：</p>
+<p><img alt="" src="../../img/04/11/anti_aliasing_rasterization_samples_filled.png" /></p>
+<p>对于每个像素来说，被三角形覆盖的子采样越少，像素受到三角形的颜色的影响也越少。现在原本三角形不平滑的边被比实际颜色浅一些的颜色像素所包围，因此观察者从远处看上去就比较平滑了。</p>
+<p>不仅颜色值会被多重采样技术影响，深度测试和模板测试也同样使用了多重采样技术。比如深度测试，顶点的深度值在运行深度测试前被插值到每个子采样中，对于模板测试，我们为每个子采样储存模板值，而不是每个像素。这意味着深度和模板缓冲的大小随着像素子样本的增加也增加了。</p>
+<p>到目前为止我们所讨论的不过是多重采样技术的工作原理。光栅化背后实际的逻辑要比我们讨论的复杂，但你现在可以理解MSAA背后的概念和逻辑了。
+(译者注： 如果看到这里还是对原理似懂非懂，可以简单看看知乎上<a href="https://www.zhihu.com/people/edliu/answers">@文刀秋二</a> 对抗锯齿技术的<a href="https://www.zhihu.com/question/20236638/answer/14438218">精彩介绍</a>)</p>
+<h2 id="openglmsaa">OpenGL中的MSAA</h2>
+<p>如果我们打算在OpenGL中使用MSAA，那么我们必须使用一个可以为每个像素储存一个以上的颜色值的颜色缓冲(因为多采样需要我们为每个采样点储存一个颜色)。我们这就需要一个新的缓冲类型，它可以储存要求数量的多重采样样本，它叫做<strong>多样本缓冲(Multisample Buffer)</strong>。</p>
+<p>多数窗口系统可以为我们提供一个多样本缓冲，以代替默认的颜色缓冲。GLFW同样给了我们这个功能，我们所要作的就是提示GLFW，我们希望使用一个带有N个样本的多样本缓冲，而不是普通的颜色缓冲，这要在创建窗口前调用<code>glfwWindowHint</code>来完成：</p>
+<pre><code class="c++">glfwWindowHint(GLFW_SAMPLES, 4);
+</code></pre>
+
+<p>当我们现在调用<code>glfwCreateWindow</code>，用于渲染的窗口就被创建了，这次每个屏幕坐标使用一个包含4个子样本的颜色缓冲。这意味着所有缓冲的大小都增长4倍。</p>
+<p>现在我们请求GLFW提供了多样本缓冲，我们还要调用<code>glEnable</code>来开启多采样，参数是 <code>GL_MULTISAMPLE</code>。大多数OpenGL驱动，多采样默认是开启的，所以这个调用有点多余，但通常记得开启它是个好主意。这样所有OpenGL实现的多采样都开启了。</p>
+<pre><code class="c++">glEnable(GL_MULTISAMPLE);
+</code></pre>
+
+<p>当默认帧缓冲有了多采样缓冲附件的时候，我们所要做的全部就是调用 <code>glEnable</code>开启多采样。因为实际的多采样算法在OpenGL驱动光栅化里已经实现了，所以我们无需再做什么了。如果我们现在来渲染教程开头的那个绿色立方体，我们会看到边缘变得平滑了：</p>
+<p><img alt="" src="../../img/04/11/anti_aliasing_multisampled.png" /></p>
+<p>这个箱子看起来平滑多了，在场景中绘制任何物体都可以利用这个技术。可以<a href="http://learnopengl.com/code_viewer.php?code=advanced/anti_aliasing_multisampling">从这里找到</a>这个简单的例子。</p>
+<h2 id="msaa">离屏MSAA</h2>
+<p>因为GLFW负责创建多采样缓冲，开启MSAA非常简单。如果我们打算使用我们自己的帧缓冲，来进行离屏渲染，那么我们就必须自己生成多采样缓冲了；现在我们需要自己负责创建多采样缓冲。</p>
+<p>有两种方式可以创建多采样缓冲，并使其成为帧缓冲的附件：纹理附件和渲染缓冲附件，和<a href="../05 Framebuffers/">帧缓冲教程</a>里讨论过的普通的附件很相似。</p>
+<h3 id="_3">多采样纹理附件</h3>
+<p>为了创建一个支持储存多采样点的纹理，我们使用 <code>glTexImage2DMultisample</code>来替代 <code>glTexImage2D</code>，它的纹理目标是<strong><code>GL_TEXTURE_2D_MULTISAMPLE</code></strong>：</p>
+<pre><code class="c++">glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, tex);
+glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGB, width, height, GL_TRUE);
+glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+</code></pre>
+
+<p>第二个参数现在设置了我们打算让纹理拥有的样本数。如果最后一个参数等于 <strong><code>GL_TRUE</code></strong>，图像上的每一个纹理像素（texel）将会使用相同的样本位置，以及同样的子样本数量。</p>
+<p>为将多采样纹理附加到帧缓冲上，我们使用<code>glFramebufferTexture2D</code>，不过这次纹理类型是<strong><code>GL_TEXTURE_2D_MULTISAMPLE</code></strong>：</p>
+<pre><code class="c++">glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, tex, 0);
+</code></pre>
+
+<p>当前绑定的帧缓冲现在有了一个纹理图像形式的多采样颜色缓冲。</p>
+<h3 id="_4">多采样渲染缓冲对象</h3>
+<p>和纹理一样，创建一个多采样渲染缓冲对象(Multisampled Renderbuffer Objects)不难。而且还很简单，因为我们所要做的全部就是当我们指定渲染缓冲的内存的时候将<code>glRenderbuffeStorage</code>改为<code>glRenderbufferStorageMuiltisample</code>：</p>
+<pre><code class="c++">glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, width, height);
+</code></pre>
+
+<p>有一样东西在这里有变化，就是缓冲目标后面那个额外的参数，我们将其设置为样本数量，当前的例子中应该是4.</p>
+<h3 id="_5">渲染到多采样帧缓冲</h3>
+<p>渲染到多采样帧缓冲对象是自动的。当我们绘制任何东西时，帧缓冲对象就绑定了，光栅化会对负责所有多采样操作。我们接着得到了一个多采样颜色缓冲，以及深度和模板缓冲。因为多采样缓冲有点特别，我们不能为其他操作直接使用它们的缓冲图像，比如在着色器中进行采样。</p>
+<p>一个多采样图像包含了比普通图像更多的信息，所以我们需要做的是压缩或还原图像。还原一个多采样帧缓冲，通常用<code>glBlitFramebuffer</code>来完成，它从一个帧缓冲中复制一个区域粘贴另一个里面，同时也将任何多采样缓冲还原。</p>
+<p><code>glBlitFramebuffer</code>把一个4屏幕坐标源区域传递到一个也是4空间坐标的目标区域。你可能还记得帧缓冲教程中，如果我们绑定到<code>GL_FRAMEBUFFER</code>，我们实际上就同时绑定到了读和写的帧缓冲目标。我们还可以通过<code>GL_READ_FRAMEBUFFER</code>和<code>GL_DRAW_FRAMEBUFFER</code>绑定到各自的目标上。<code>glBlitFramebuffer</code>函数从这两个目标读取，并决定哪一个是源哪一个是目标帧缓冲。接着我们就可以通过把图像位块传送(Blitting)到默认帧缓冲里，将多采样帧缓冲输出传递到实际的屏幕了：</p>
+<pre><code class="c++">glBindFramebuffer(GL_READ_FRAMEBUFFER, multisampledFBO);
+glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+</code></pre>
+
+<p>如果我们渲染应用，我们将得到和没用帧缓冲一样的结果：一个绿色立方体，它使用MSAA显示出来，但边缘锯齿明显少了：</p>
+<p><img alt="" src="../../img/04/11/anti_aliasing_multisampled.png" /></p>
+<p>你可以<a href="http://learnopengl.com/code_viewer.php?code=advanced/anti_aliasing_framebuffers">在这里找到源代码</a>。</p>
+<p>但是如果我们打算使用一个多采样帧缓冲的纹理结果来做这件事，就像后处理一样会怎样？我们不能在片段着色器中直接使用多采样纹理。我们可以做的事情是把多缓冲位块传送(Blit)到另一个带有非多采样纹理附件的FBO中。之后我们使用这个普通的颜色附件纹理进行后处理，通过多采样来对一个图像渲染进行后处理效率很高。这意味着我们必须生成一个新的FBO，它仅作为一个将多采样缓冲还原为一个我们可以在片段着色器中使用的普通2D纹理中介。伪代码是这样的：</p>
+<pre><code class="c++">GLuint msFBO = CreateFBOWithMultiSampledAttachments();
+// Then create another FBO with a normal texture color attachment
+...
+glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, screenTexture, 0);
+...
+while(!glfwWindowShouldClose(window))
+{
+    ...
+
+    glBindFramebuffer(msFBO);
+    ClearFrameBuffer();
+    DrawScene();
+    // Now resolve multisampled buffer(s) into intermediate FBO
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, msFBO);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, intermediateFBO);
+    glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    // Now scene is stored as 2D texture image, so use that image for post-processing
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    ClearFramebuffer();
+    glBindTexture(GL_TEXTURE_2D, screenTexture);
+    DrawPostProcessingQuad();  
+
+    ...
+}
+</code></pre>
+
+<p>如果我们实现帧缓冲教程中讲的后处理代码，我们就能创造出没有锯齿边的所有效果很酷的后处理特效。使用模糊kernel过滤器，看起来会像这样：</p>
+<p><img alt="" src="../../img/04/11/anti_aliasing_post_processing.png" /></p>
+<p>你可以<a href="http://learnopengl.com/code_viewer.php?code=advanced/anti_aliasing_post_processing">在这里找到所有MSAA版本的后处理源码</a>。</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>因为屏幕纹理重新变回了只有一个采样点的普通纹理，有些后处理过滤器，比如边检测（edge-detection）将会再次导致锯齿边问题。为了修正此问题，之后你应该对纹理进行模糊处理，或者创建你自己的抗锯齿算法。</p>
+</div>
+<p>当我们希望将多采样和离屏渲染结合起来时，我们需要自己负责一些细节。所有细节都是值得付出这些额外努力的，因为多采样可以明显提升场景视频输出的质量。要注意，开启多采样会明显降低性能，样本越多越明显。本文写作时，MSAA4样本很常用。</p>
+<h2 id="_6">自定义抗锯齿算法</h2>
+<p>可以直接把一个多采样纹理图像传递到着色器中，以取代必须先还原的方式。GLSL给我们一个选项来为每个子样本进行纹理图像采样，所以我们可以创建自己的抗锯齿算法，在比较大的图形应用中，通常这么做。</p>
+<p>为获取每个子样本的颜色值，你必须将纹理uniform采样器定义为sampler2DMS，而不是使用sampler2D：</p>
+<pre><code class="c++">uniform sampler2DMS screenTextureMS;
+</code></pre>
+
+<p>使用texelFetch函数，就可以获取每个样本的颜色值了：</p>
+<pre><code class="c++">vec4 colorSample = texelFetch(screenTextureMS, TexCoords, 3);  // 4th subsample
+</code></pre>
+
+<p>我们不会深究自定义抗锯齿技术的创建细节，但是会给你自己去实现它提供一些提示。</p>
+
+<div id="disqus_thread"></div>
+<script>
+    (function() {
+        var d = document, s = d.createElement('script');
+        
+        s.src = '//learnopengl-cn.disqus.com/embed.js';
+        
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>请启用JavaScript以浏览<a href="https://disqus.com/?ref_noscript" rel="nofollow">Disqus评论。</a></noscript></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            
+            <center>Powered by <a href="http://www.mkdocs.org/">MkDocs</a> and <a href="http://bootswatch.com/yeti/">Yeti</a></center>
+        </footer>
+
+        <script src="../../js/jquery-1.10.2.min.js"></script>
+        <script src="../../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../../js/highlight.pack.js"></script>
+        <script>var base_url = '../..';</script>
+        <script data-main="../../mkdocs/js/search.js" src="../../mkdocs/js/require.js"></script>
+        <script src="../../js/base.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                        <h4 class="modal-title" id="exampleModalLabel">搜索</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            请在下面输入你要搜索的文本（仅支持英文）：
+                        </p>
+                        <form role="form">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="搜索..." id="mkdocs-search-query">
+                            </div>
+                        </form>
+                        <div id="mkdocs-search-results"></div>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
